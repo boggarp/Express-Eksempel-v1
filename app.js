@@ -9,11 +9,11 @@ const db = setup.db
 // Handler fremsiden 
 // -> Visning av alle personer registrert, med link til info om hver enkelt person
 app.get('', (request,response) => {
-    //Henter alle rader i tabellen personer
-    const sqlPersoner = db.prepare('SELECT * FROM personer')
+    //Henter alle rader i tabellen person
+    const sqlPersoner = db.prepare('SELECT * FROM person')
     const personer = sqlPersoner.all()
 
-    // Rendrer index.hbs med alle radene i personer, 
+    // Rendrer index.hbs med alle radene i person, 
     // og sender tilbake til klient
     response.render("index.hbs", {
         title: "The Country Visit Tracker", 
@@ -34,7 +34,7 @@ app.get('/personInfo', (request,response) => {
     FROM besok 
     INNER JOIN land
     ON besok.land_id = land.id 
-    WHERE personer_id=(?)`)
+    WHERE person_id=(?)`)
     const personInfo = sqlpersonInfo.all(id)
 
     // Rendrer personInfo.hbs med navnet til personen,  
@@ -62,15 +62,15 @@ app.get('/adminForms', (request,response) => {
 // Handler for /visitForm
 //  -> Legg til et land en person har besøkt
 app.get('/visitForm', (request,response) => {
-    //Henter alle rader i tabellen personer
-    const sqlPersoner = db.prepare('SELECT * FROM personer')
+    //Henter alle rader i tabellen person
+    const sqlPersoner = db.prepare('SELECT * FROM person')
     const personer = sqlPersoner.all()
 
     //Henter alle rader i tabellen land
     const sqlLand = db.prepare('SELECT * FROM land')
     const land = sqlLand.all()
 
-    // Rendrer visitForm.hbs med radene fra personer og land, 
+    // Rendrer visitForm.hbs med radene fra person og land, 
     // og sender resultat til klient
     response.render("visitForm.hbs", {
         title: "Legg til besøk", 
@@ -106,7 +106,7 @@ app.post('/addPerson', (request,response) => {
     
     //Setter inn fornavn, etternavn og postnummer. Returnerer feilmelding viss det ikke går.
     //Sender klient til takk.html viss innsetting var vellykket.
-    const sql = db.prepare('INSERT INTO personer (fornavn,etternavn,postnummer) VALUES (?,?,?)');
+    const sql = db.prepare('INSERT INTO person (fornavn,etternavn,postnummer) VALUES (?,?,?)');
     try {
         const info = sql.run(request.body.fornavn,request.body.etternavn, request.body.postnummer)
     } catch (error) {
@@ -139,7 +139,7 @@ app.post('/addVisit', (request,response) => {
 
     //Setter inn et nytt besøk. Returnerer feilmelding viss det ikke går.
     //Sender klient til takk.html viss innsetting var vellykket.
-    const sql = db.prepare('INSERT INTO besok (personer_id, land_id,antall_besok) VALUES (?,?,?)');
+    const sql = db.prepare('INSERT INTO besok (person_id, land_id,antall_besok) VALUES (?,?,?)');
     try {
         const info = sql.run(request.body.person_id, request.body.land_id, 1)
     } catch (error) {
