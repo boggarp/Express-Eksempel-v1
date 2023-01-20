@@ -26,11 +26,19 @@
                 <br>
 
                 <label for="navn">Postnummer:</label>
+
+
+
                 <select name="postnummer" id="postnummer">
                     {{#each poststed}}
                         <option value="{{this.postnummer}}">{{this.postnummer}} - {{this.poststed}}</option>
                     {{/each}}
                 </select>
+
+
+
+
+
 
                 <br><br>
                 <button>Send inn</button> 
@@ -74,6 +82,22 @@
 
             </form>
         </fieldset>
+    </div>
+    <br><br>
+    <!-- Slett personer -->
+
+
+    <!-- Add Person Form -->
+    <div class="form">
+        <fieldset>
+            <legend>Slett personer</legend>
+            <ul>
+            {{#each personer}}
+                <li>{{this.fornavn}} {{this.etternavn}} - <a href="/delete?id={{this.id}}">Slett</a> </li>
+            {{/each}} 
+            </ul>
+
+            </fieldset>
     </div>
     
 </body>

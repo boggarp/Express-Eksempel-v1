@@ -52,12 +52,18 @@ app.get('/adminForms', (request,response) => {
     const sql = db.prepare('SELECT * FROM poststed')
     const poststed = sql.all()
 
+    //Henter alle rader i tabellen person
+    const sqlPersoner = db.prepare('SELECT * FROM person')
+    const personer = sqlPersoner.all()
+
     // Rendrer adminForms med radene fra poststed, 
     // og sender resultat til klient
     response.render("adminForms.hbs", {
         title: "Admin Page", 
-        poststed: poststed})
+        poststed: poststed,
+        personer: personer})
 })
+
 
 // Handler for /visitForm
 //  -> Legg til et land en person har besøkt
@@ -78,6 +84,20 @@ app.get('/visitForm', (request,response) => {
         land: land})
 })
 
+
+/**************************************************
+     HANDLERE FOR endring av database med get
+     og query-String 
+***************************************************/
+
+//Handler for å slette person med id gitt i querey (?id=...)
+app.get('/delete', (request,response) => {
+
+    console.log("Deleting: " + request.query.id)
+    const sql = db.prepare("DELETE FROM person WHERE id=(?)");
+    const info = sql.run(request.query.id)
+    response.redirect("back")
+})
 
 /**************************************************
      HANDLERE FOR HTML-Skjemaer (POST-METHOD) 
